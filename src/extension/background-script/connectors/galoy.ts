@@ -448,8 +448,8 @@ class Galoy implements Connector {
   async makeInvoice(args: MakeInvoiceArgs): Promise<MakeInvoiceResponse> {
     const query = {
       query: `
-        mutation lnInvoiceCreate($input: LnInvoiceCreateInput!) {
-          lnInvoiceCreate(input: $input) {
+        mutation lnInvoiceCreateOnBehalfOfRecipient($input: lnInvoiceCreateOnBehalfOfRecipientInput!) {
+          lnInvoiceCreateOnBehalfOfRecipient(input: $input) {
             invoice {
               paymentRequest
               paymentHash
@@ -471,15 +471,15 @@ class Galoy implements Connector {
       },
     };
     return this.request(query).then(({ data, errors }) => {
-      const errs = errors || data.lnInvoiceCreate.errors;
+      const errs = errors || data.lnInvoiceCreateOnBehalfOfRecipient.errors;
       if (errs && errs.length) {
         throw new Error(errs[0].message || JSON.stringify(errs));
       }
 
       return {
         data: {
-          paymentRequest: data.lnInvoiceCreate.invoice.paymentRequest,
-          rHash: data.lnInvoiceCreate.invoice.paymentHash,
+          paymentRequest: data.lnInvoiceCreateOnBehalfOfRecipient.invoice.paymentRequest,
+          rHash: data.lnInvoiceCreateOnBehalfOfRecipient.invoice.paymentHash,
         },
       };
     });
